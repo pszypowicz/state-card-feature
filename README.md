@@ -1,5 +1,11 @@
 # State card feature
 
+[![HACS Custom](https://img.shields.io/badge/HACS-Custom-41BDF5?logo=homeassistant&logoColor=white)](https://github.com/hacs/integration)
+[![GitHub Release](https://img.shields.io/github/v/release/pszypowicz/state-card-feature)](https://github.com/pszypowicz/state-card-feature/releases/latest)
+[![Validate](https://github.com/pszypowicz/state-card-feature/actions/workflows/validate.yml/badge.svg)](https://github.com/pszypowicz/state-card-feature/actions/workflows/validate.yml)
+[![Downloads](https://img.shields.io/github/downloads/pszypowicz/state-card-feature/total)](https://github.com/pszypowicz/state-card-feature/releases)
+[![License](https://img.shields.io/github/license/pszypowicz/state-card-feature)](LICENSE)
+
 A custom card feature for Home Assistant dashboards. It shows the entity state, or any other state content item, in the feature area of a card.
 
 With `features_position: inline` the value sits on the right side of a tile, next to the name. This turns a tile into a read-only indicator for a select, an input_datetime, or a sensor. In the bottom position the feature works as a large value display.
@@ -15,6 +21,12 @@ The first tile uses the inline position. The two middle tiles use the bottom pos
 ## Installation
 
 ### HACS
+
+Click the badge to open this repository in HACS on your instance, then click **Download**.
+
+[![Open this repository in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=pszypowicz&repository=state-card-feature&category=plugin)
+
+To add it by hand instead:
 
 1. Open HACS and click the three dots in the top right corner.
 2. Select **Custom repositories**.
