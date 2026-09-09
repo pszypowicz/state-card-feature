@@ -1,6 +1,6 @@
 {
   "name": "state-card-feature",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Home Assistant card feature that shows the entity state in the feature area of a card",
   "private": true,
   "type": "module",
