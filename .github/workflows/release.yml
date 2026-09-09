@@ -1,0 +1,25 @@
+name: Release
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  upload:
+    name: Build and upload asset
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Upload asset to the release
+        run: gh release upload "$GITHUB_REF_NAME" dist/state-card-feature.js --clobber
+        env:
+          GH_TOKEN: ${{ github.token }}
