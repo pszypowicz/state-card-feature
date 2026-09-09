@@ -60,6 +60,7 @@ export class StateCardFeature extends LitElement {
         .hass=${this.hass}
         .stateObj=${stateObj}
         .content=${this._config.state_content}
+        .timeFormat=${this._config.time_format}
       ></state-display>
     `;
   }

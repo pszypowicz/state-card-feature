@@ -55,10 +55,11 @@ lovelace:
 
 Add the feature to a tile card. The feature has one option, `state_content`. It accepts the same values as the tile card state content: `state`, `name`, `last_changed`, `last_updated`, or any attribute name. It can be a single value or a list.
 
-| Option          | Type           | Default | Description                                    |
-| --------------- | -------------- | ------- | ---------------------------------------------- |
-| `type`          | string         |         | Required. Must be `custom:state-card-feature`. |
-| `state_content` | string or list | `state` | The state content items to show, in order.     |
+| Option          | Type             | Default    | Description                                                                                                                                                                                         |
+| --------------- | ---------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `type`          | string           |            | Required. Must be `custom:state-card-feature`.                                                                                                                                                      |
+| `state_content` | string or list   | `state`    | The state content items to show, in order.                                                                                                                                                          |
+| `time_format`   | string or object | `relative` | How to show a timestamp. One of `relative`, `total`, `date`, `time`, `datetime`, or an object with `type` and `style` (`short` or `long`). The editor shows this option only for timestamp content. |
 
 Inline indicator for a select entity:
 
@@ -82,6 +83,18 @@ features:
     state_content:
       - state
       - last_changed
+```
+
+A timestamp sensor as a clock time instead of relative time. Without `time_format`, a timestamp such as the next sunrise shows as "In 15 hours":
+
+```yaml
+type: tile
+entity: sensor.sun_next_rising
+hide_state: true
+features_position: inline
+features:
+  - type: custom:state-card-feature
+    time_format: time
 ```
 
 Inline state with a toggle below it. With the inline position, the first feature sits next to the name and the remaining features stack below the tile:

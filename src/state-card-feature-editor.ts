@@ -1,24 +1,37 @@
 import { html, LitElement, nothing } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { fireEvent } from "./fire-event";
+import { stateContentHasTimestamp } from "./timestamp-content";
 import type {
   HomeAssistant,
   LovelaceCardFeatureContext,
   StateCardFeatureConfig,
 } from "./types";
 
-const STATE_CONTENT_LABEL_KEY =
-  "ui.panel.lovelace.editor.card.tile.state_content";
+const LABEL_KEYS: Record<string, string> = {
+  state_content: "ui.panel.lovelace.editor.card.tile.state_content",
+  time_format: "ui.panel.lovelace.editor.card.generic.time_format",
+};
 
-interface SchemaItem {
-  name: "state_content";
-  selector: {
-    ui_state_content: {
-      entity_id?: string;
-      allow_context: boolean;
+const FALLBACK_LABELS: Record<string, string> = {
+  state_content: "State content",
+  time_format: "Time format",
+};
+
+type SchemaItem =
+  | {
+      name: "state_content";
+      selector: {
+        ui_state_content: {
+          entity_id?: string;
+          allow_context: boolean;
+        };
+      };
+    }
+  | {
+      name: "time_format";
+      selector: { ui_time_format: Record<string, never> };
     };
-  };
-}
 
 @customElement("state-card-feature-editor")
 export class StateCardFeatureEditor extends LitElement {
@@ -32,8 +45,8 @@ export class StateCardFeatureEditor extends LitElement {
     this._config = config;
   }
 
-  private _schema(entityId?: string): SchemaItem[] {
-    return [
+  private _schema(entityId?: string, showTimeFormat = false): SchemaItem[] {
+    const schema: SchemaItem[] = [
       {
         name: "state_content",
         selector: {
@@ -44,6 +57,13 @@ export class StateCardFeatureEditor extends LitElement {
         },
       },
     ];
+    if (showTimeFormat) {
+      schema.push({
+        name: "time_format",
+        selector: { ui_time_format: {} },
+      });
+    }
+    return schema;
   }
 
   protected render() {
@@ -51,11 +71,18 @@ export class StateCardFeatureEditor extends LitElement {
       return nothing;
     }
 
+    const entityId = this.context?.entity_id;
+    const stateObj = entityId ? this.hass.states[entityId] : undefined;
+    const showTimeFormat = stateContentHasTimestamp(
+      stateObj,
+      this._config.state_content,
+    );
+
     return html`
       <ha-form
         .hass=${this.hass}
         .data=${this._config}
-        .schema=${this._schema(this.context?.entity_id)}
+        .schema=${this._schema(entityId, showTimeFormat)}
         .computeLabel=${this._computeLabel}
         @value-changed=${this._valueChanged}
       ></ha-form>
@@ -67,12 +94,10 @@ export class StateCardFeatureEditor extends LitElement {
     fireEvent(this, "config-changed", { config: ev.detail.value });
   }
 
-  private _computeLabel = (schema: SchemaItem): string => {
-    const label = this.hass?.localize(STATE_CONTENT_LABEL_KEY);
-    return (
-      label || (schema.name === "state_content" ? "State content" : schema.name)
-    );
-  };
+  private _computeLabel = (schema: SchemaItem): string =>
+    this.hass?.localize(LABEL_KEYS[schema.name]) ||
+    FALLBACK_LABELS[schema.name] ||
+    schema.name;
 }
 
 declare global {

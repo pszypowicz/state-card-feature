@@ -2,9 +2,25 @@ import type { HassEntity } from "home-assistant-js-websocket";
 
 export type StateContent = string | string[];
 
+export const TIMESTAMP_RENDERING_FORMATS = [
+  "relative",
+  "total",
+  "date",
+  "time",
+  "datetime",
+] as const;
+
+export type TimestampRenderingFormat =
+  | (typeof TIMESTAMP_RENDERING_FORMATS)[number]
+  | {
+      type: (typeof TIMESTAMP_RENDERING_FORMATS)[number];
+      style?: "short" | "long";
+    };
+
 export interface StateCardFeatureConfig {
   type: string;
   state_content?: StateContent;
+  time_format?: TimestampRenderingFormat;
 }
 
 export interface LovelaceCardFeatureContext {
